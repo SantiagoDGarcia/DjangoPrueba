@@ -1,0 +1,72 @@
+{% extends "main.html" %}
+
+{% block title %}
+      {{titulo}}
+{% endblock %}
+{% block content %}
+<div id="inicio">
+      <h2>{{titulo}} {{accesorio.nombre}}</h2>
+      <h5>Costo original: {{accesorio.monto_compra}}</h5>
+      <h5>Precio de venta: {{accesorio.monto_venta}}</h5>
+      <h5>Ganancia: {{accesorio.ganancia}}</h5>
+      <h5>Saldo disponible transaccion: ${{accesorio.dinero_disponible_transaccion}}</h5>
+
+      {% for x in accesorio.transacciones.all %}    
+            {{x.monedero}}  
+            {{x.dinero}}  <br>
+      {% endfor %}
+      {{accesorio.valor_total_transacciones}}
+
+      <form action="" method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="formLocation">
+                  <div class="contenidoForm">
+                        {{ form.monedero.errors }}
+                        {% if valor2 == false %}
+                              <label for="{{ form.monedero.id_for_label }}">Monedero</label>
+                        {% endif %}
+                        {{ form.monedero }}
+                  </div>
+                  <div class="contenidoForm">
+                        {{ form.accesorio.errors }}
+                        {% if valor3 == false %}
+                              <label for="{{ form.accesorio.id_for_label }}">accesorio</label>
+                        {% endif %}
+                        {{ form.accesorio }}
+                  </div>
+                  
+                  <div class="contenidoForm">
+                        {{ form.fecha.errors }}
+                        {% if valor == false %}
+                              <label for="{{ form.fecha.id_for_label }}">fecha</label>
+                        {% endif %}
+                        {{ form.fecha }}
+                  </div>
+                  <div class="contenidoForm">
+                        {{ form.hora.errors }}
+                        {% if valor == false %}
+                              <label for="{{ form.hora.id_for_label }}">hora</label>
+                        {% endif %}
+                        {{ form.hora }}
+                  </div>
+                  <div class="contenidoForm">
+                        {{ form.tipo.errors }}
+                        <label for="{{ form.tipo.id_for_label }}">tipo</label>
+                        {{ form.tipo }}
+                  </div>
+                  <div class="contenidoForm">
+                        {{ form.dinero.errors }}
+                        <label for="{{ form.dinero.id_for_label }}">dinero</label>
+                        {{ form.dinero }}
+                  </div>
+                  <div class="contenidoForm">
+                        {{ form.motivo.errors }}
+                        <label for="{{ form.motivo.id_for_label }}">motivo</label>
+                        {{ form.motivo }}
+                  </div>
+                  <button type='submit'>Confirmar</button>
+            </div>
+      </form>
+</div>
+{% endblock %}

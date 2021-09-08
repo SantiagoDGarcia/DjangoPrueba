@@ -1,0 +1,77 @@
+{% extends "main.html" %}
+
+{% block title %}
+      Inicio | {{ block.super }}
+{% endblock %}
+{% load static %}
+
+{% block content %}
+<div id="inicio">
+      <h1>Lista de transacciones de {{monedero.nombre}} </h1>
+      <hr>
+      [<a href="{% url 'monedero_transaccion' monedero.id %}">Añadir transaccion</a>] 
+      <table id="tabla_datos" class="">
+            <thead class="">
+            <tr>
+                  <th>Motivo</th>
+                  <th>Fecha</th>
+                  <th>Hora</th>
+                  <th>Tipo</th>
+                  <th>Dinero</th>
+                  <th></th>
+            </tr>
+            </thead>
+            {% for x in monedero.transacciones.all %}
+            <tr>
+                  <td>
+                        {% if x.telefono %}
+                              <ul>
+                                    <li> {{x.telefono}}</li>                         
+                                    <li><a href="{% url 'editar_telefono' x.id %}"><img src="{% static 'img/ver.svg' %}" style="width: 20px;"></a></li>
+                              </ul>
+                        {% else %}
+                              {{x.motivo}}
+                        {% endif %}                     
+                  </td>
+                  <td>{{x.fecha}}</td>
+                  <td>{{x.hora}}</td>
+                  <td>{{x.tipo}}</td>
+                  <td>{{x.dinero}}</td>
+                  
+                  <td>
+                        <a href="{% url 'editar_telefono' x.id %}"><img src="{% static 'img/editar.svg' %}" style="width: 20px;"></a>
+                        <a class="eliminar" target={{x.id}}> <img src="{% static 'img/eliminar.svg' %}" style="width: 20px;"> </a>
+                        <div class="cuadro-eliminar" id="fondo-eliminar{{x.id}}" target={{x.id}} style="display: none;">
+                              <ul>
+                                    ¿Deseas eliminar esta transacción?
+                                    <li> {{x.telefono}}</li>
+                                    <li> {{x.motivo}}</li>
+                                    <li>{{x.fecha}} {{x.hora}}</li>
+                                    <li>{{x.dinero}}</li>
+                              </ul>
+                              <a id="cancelar">Cancelar</a> <br> 
+                              <a href="{% url 'eliminar_transaccion' x.id %}">Confirmar</a> <br> 
+                        </div>
+
+                  </td>
+            </tr>
+            {% endfor %}
+      </table>
+      <script type="text/javascript">
+            $(document).ready( function () {
+              $('#tabla_datos').DataTable({
+                        "language": {
+                              "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                        },
+                        "order": [[ 1, "desc" ], [ 2, "desc" ], ],
+                        "columnDefs": [
+                              { "orderable": false, "targets": 0 },
+                              { "orderable": false, "targets": 5 },
+                        ],
+                        "orderMulti": true,
+                        //"dom": '<"top"i>rt<"bottom"flp><"clear">'
+                    });
+            });
+      </script>
+</div>
+{% endblock %}

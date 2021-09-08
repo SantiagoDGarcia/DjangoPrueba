@@ -1,0 +1,100 @@
+{% extends "main.html" %}
+
+{% block title %}
+      {{titulo}}
+{% endblock %}
+{% block content %}
+<div id="inicio">
+      <h2>{{titulo}} {{dispositivo.modelo.nombre}}</h2>
+      <h5>Costo original: {{dispositivo.monto_compra}}</h5>
+      <h5>Precio de venta: {{dispositivo.monto_venta}}</h5>
+      <h5>Ganancia: {{dispositivo.ganancia}}</h5>
+      <h5>Saldo disponible transaccion: ${{dispositivo.dinero_disponible_transaccion}}</h5>
+
+      {% for x in dispositivo.transacciones.all %}    
+            {{x.monedero}}  
+            {{x.dinero}}  <br>
+      {% endfor %}
+      {{dispositivo.valor_total_transacciones}}
+
+      {% if dispositivo.sefue_cargador_rapido %}
+            {% if dispositivo.llego_cargador_rapido %}
+                  <h5>Cargador: $0,00</h5>
+            {% else %}
+                  <h5>Cargador Rápido: ${{dispositivo.precio_cargador_rapido}}</h5>
+            {% endif %}
+      {% else %}
+            {% if dispositivo.sefue_cargador %}
+                  {% if dispositivo.llego_cargador %}
+                        <h5>Cargador: $0,00</h5>
+                  {% else %}
+                        <h5>Cargador: ${{dispositivo.precio_cargador}}</h5>
+                  {% endif %}
+            {% endif %}
+      {% endif %}
+
+      {% if dispositivo.sefue_audifonos %}
+            {% if dispositivo.llego_audifonos %}
+                  <h5>Audifonos: $0,00</h5>
+            {% else %}
+                  <h5>Audifonos: ${{dispositivo.precio_audifonos}}</h5>
+            {% endif %}
+      {% else %}
+            <h5>Audifonos: $0,00</h5>
+      {% endif %}
+
+      {{dispositivo.precios_accesorios}}
+
+      <form action="" method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="formLocation">
+                  <div class="contenidoForm">
+                        {{ form.monedero.errors }}
+                        {% if valor2 == false %}
+                              <label for="{{ form.monedero.id_for_label }}">Monedero</label>
+                        {% endif %}
+                        {{ form.monedero }}
+                  </div>
+                  <div class="contenidoForm">
+                        {{ form.dispositivo.errors }}
+                        {% if valor3 == false %}
+                              <label for="{{ form.dispositivo.id_for_label }}">dispositivo</label>
+                        {% endif %}
+                        {{ form.dispositivo }}
+                  </div>
+                  
+                  <div class="contenidoForm">
+                        {{ form.fecha.errors }}
+                        {% if valor == false %}
+                              <label for="{{ form.fecha.id_for_label }}">fecha</label>
+                        {% endif %}
+                        {{ form.fecha }}
+                  </div>
+                  <div class="contenidoForm">
+                        {{ form.hora.errors }}
+                        {% if valor == false %}
+                              <label for="{{ form.hora.id_for_label }}">hora</label>
+                        {% endif %}
+                        {{ form.hora }}
+                  </div>
+                  <div class="contenidoForm">
+                        {{ form.tipo.errors }}
+                        <label for="{{ form.tipo.id_for_label }}">tipo</label>
+                        {{ form.tipo }}
+                  </div>
+                  <div class="contenidoForm">
+                        {{ form.dinero.errors }}
+                        <label for="{{ form.dinero.id_for_label }}">dinero</label>
+                        {{ form.dinero }}
+                  </div>
+                  <div class="contenidoForm">
+                        {{ form.motivo.errors }}
+                        <label for="{{ form.motivo.id_for_label }}">motivo</label>
+                        {{ form.motivo }}
+                  </div>
+                  <button type='submit'>Confirmar</button>
+            </div>
+      </form>
+</div>
+{% endblock %}

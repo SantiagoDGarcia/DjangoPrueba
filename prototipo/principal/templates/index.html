@@ -1,0 +1,392 @@
+{% extends "main.html" %}
+
+{% block title %}
+      Inicio | {{ block.super }}
+{% endblock %}
+{% load static %}
+
+{% block content %}
+<div id="inicio">
+      <h1>Todo el inventario</h1>
+      <div id="monederos">
+            Dinero en 
+            {% for i in monederos %} 
+                  <a href="{% url 'monedero' i.id %}">{{i.nombre}}: <p>${{i.obtener_dinero_caja}} </p></a> 
+            {% endfor %}
+      </div>
+      <div id="resultados">
+            <p id="compras"></p>
+            <p id="ventas"></p>
+            <p id="ganancias"></p>
+      </div>
+      <br>
+      <img src="{% static 'img/mas.svg' %}" style="width: 20px;">
+      <a href="{% url 'crear_telefono' %}">  Teléfono</a>
+      <a href="{% url 'crear_dispositivo' %}">Dipositivo</a>
+      <a href="{% url 'crear_accesorio' %}">Accesorio</a>
+
+      <table id="tabla_datos" class="row-border hover">
+            <thead>
+            <tr>
+                  <th>Dispositivo</th>
+                  <th>Fecha venta</th>
+                  <th>IMEI/Serial</th>
+                  <th>Modalidad</th>
+                  <th>Fecha de llegada</th>
+                  <th>Proveedor</th>
+                  <th>Precio llegada</th>
+                  <th>Precio venta</th>
+                  <th>Ganancia</th>
+                  <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for x in telefonos %}      
+                  <tr>
+                        <td>
+                              {% if x.vendido %}
+                                    <a class="ver vendidos" target={{x.id}}>
+                                          <div style="text-align: left;">
+                                                {% if x.modalidad == "Open box"%}
+                                                      <img src="{% static 'img/openbox.svg' %}" style="width: 20px; margin-left: 1%;"> 
+                                                {% else %}
+                                                      <img src="{% static 'img/sellado.svg' %}" style="width: 20px; margin-left: 1%;"> 
+                                                {% endif %}
+                                                <p>{{x.modelo.nombre}} - {{x.color}}</p> 
+                                                <p>- {{x.capacidad}} </p>    
+                                          </div> 
+                                          <div class="infoventa">
+                                                <div style="border-left: none;">
+                                                      <img src="{% static 'img/bateria.svg' %}" style="width: 13px; margin-left: 1%; margin-top: 0.5% ;"> <p style="margin: 0; padding: 0;">{{x.bateria}}%</p>
+                                                      {% if x.llego_cargador or x.llego_audifonos or x.llego_cargador_rapido %}
+                                                            {% if x.llego_cargador %}
+                                                                  <img src="{% static 'img/adaptador.svg' %}" style="width: 13px;">
+                                                            {% endif %}
+                                                            {% if x.llego_cargador_rapido %}
+                                                                  <img src="{% static 'img/nuevo.svg' %}" style="width: 16px;">
+                                                            {% endif %}
+                                                            {% if x.llego_audifonos %}
+                                                                  <img src="{% static 'img/audifonos.svg' %}" style="width: 13px;"> 
+                                                            {% endif %}
+                                                      {% else %}
+                                                            <img src="{% static 'img/smartphone.svg' %}" style="width: 14px;">
+                                                      {% endif %}
+                                                </div>
+                                                <div >
+                                                      {% if x.sefue_cargador or x.sefue_audifonos or x.sefue_cargador_rapido%}
+                                                            {% if x.sefue_cargador %}
+                                                                  <img src="{% static 'img/adaptador.svg' %}" style="width: 13px;">
+                                                            {% endif %}
+                                                            {% if x.sefue_cargador_rapido %}
+                                                                  <img src="{% static 'img/nuevo.svg' %}" style="width: 16px;">
+                                                            {% endif %}
+                                                            {% if x.sefue_audifonos %}
+                                                                  <img src="{% static 'img/audifonos.svg' %}" style="width: 13px;"> 
+                                                            {% endif %}
+                                                      {% else %}
+                                                            <img src="{% static 'img/smartphone.svg' %}" style="width: 14px;">
+                                                      {% endif %}
+
+                                                      {% if x.entrega == "Entregado" %}
+                                                            <img src="{% static 'img/entrega.svg' %}" style="width: 14px;">
+                                                      {% else %}
+                                                            {% if x.entrega == "Envio servientrega" %}
+                                                                  <img src="{% static 'img/enviarservi.svg' %}" style="width: 16px;">
+                                                            {% else  %}
+                                                                  <img src="{% static 'img/enviarcoop.svg' %}" style="width: 16px;">
+                                                            {% endif %}
+                                                      {% endif %}
+                                                </div>                                          
+                                          </div>
+                                    </a>
+                              {% else %}
+                                    <a class="ver novendidos" target={{x.id}}>
+                                          <div style="text-align: left;">
+                                                {% if x.modalidad == "Open box"%}
+                                                      <img src="{% static 'img/openbox.svg' %}" style="width: 20px; margin-left: 1%;"> 
+                                                {% else %}
+                                                      <img src="{% static 'img/sellado.svg' %}" style="width: 20px; margin-left: 1%;"> 
+                                                {% endif %}
+                                                <p>{{x.modelo.nombre}} - {{x.color}}</p> 
+                                                <p>{{x.capacidad}} </p>    
+                                          </div> 
+                                          <div class="infoventa">
+                                                <div style="border-left: none;">
+                                                      <img src="{% static 'img/bateria.svg' %}" style="width: 13px; margin-left: 1%; margin-top: 0.5% ;"> <p style="margin: 0; padding: 0;">{{x.bateria}}%</p>
+                                                      {% if x.llego_cargador or x.llego_audifonos %}
+                                                            {% if x.llego_cargador %}
+                                                                  <img src="{% static 'img/adaptador.svg' %}" style="width: 13px;">
+                                                            {% endif %}
+                                                            {% if x.llego_audifonos %}
+                                                                  <img src="{% static 'img/audifonos.svg' %}" style="width: 13px;"> 
+                                                            {% endif %}
+                                                      {% else %}
+                                                            <img src="{% static 'img/smartphone.svg' %}" style="width: 14px;">
+                                                      {% endif %}
+                                                </div>                                     
+                                          </div>
+                                    </a>
+                              {% endif %}
+                              <div class="cuadro-ver" id="fondo-ver{{x.id}}" target={{x.id}} style="display: none;">
+                                    <ul>
+                                          <li> {{x.modelo.nombre}}</li>
+                                          <li> {{x.capacidad}}</li>
+                                          <li>{{x.color}}</li>
+                                          <li>{{x.imei}}</li>
+                                    </ul>
+                                    <a id="cancelar">Cancelar</a> <br> 
+                              </div>
+                        </td>
+                        <td>{{x.fecha_venta|date:'Y-m-d'}} </td>
+                        <td>{{x.imei}}</td>
+                        <td>{{x.modalidad}}</td>
+                        <td>{{x.fecha_compra|date:'Y-m-d'}}</td>
+                        <td>{{x.proveedor}}</td>
+                        <td class="classcompras">{{x.monto_compra}}</td>
+                        {%if x.monto_venta%}
+                              <td class="classventas">{{x.monto_venta}}</td>
+                        {% else %}
+                              <td>-</td>
+                        {% endif %}
+
+                        <td class="classganancias">{{x.ganancia}}</td>
+                        <td>
+                              <a href="{% url 'editar_telefono' x.id %}"><img src="{% static 'img/editar.svg' %}" style="width: 20px;"></a>
+                              {% if x.vendido %}
+                                    <a href="{% url 'monedero_telefono' x.id %}"><img src="{% static 'img/cartera.svg' %}" style="width: 20px;"> </a>
+                              {% endif %}
+                              
+                              <a class="eliminar" target={{x.id}}> <img src="{% static 'img/eliminar.svg' %}" style="width: 20px;  cursor: pointer;"> </a>
+                              <div class="cuadro-eliminar" id="fondo-eliminar{{x.id}}" target={{x.id}} style="display: none;">
+                                    ¿Deseas eliminar este dispositivo?
+                                    <ul>
+                                          <li> {{x.modelo.nombre}}</li>
+                                          <li> {{x.capacidad}}</li>
+                                          <li>{{x.color}}</li>
+                                          <li>{{x.imei}}</li>
+                                    </ul>
+                                    <a id="cancelar">Cancelar</a> <br> 
+                                    <a href="{% url 'eliminar_telefono' x.id %}">Confirmar</a> <br> 
+                              </div>
+                        </td>
+                  </tr>
+            {% endfor %}
+            {% for x in dispositivos %}      
+                  <tr>
+                        <td>
+                              {% if x.vendido %}
+                                    <a class="ver vendidos" target={{x.id}}>
+                                          <div style="text-align: left;">
+                                                {% if x.modalidad == "Open box"%}
+                                                      <img src="{% static 'img/openbox.svg' %}" style="width: 20px; margin-left: 1%;"> 
+                                                {% else %}
+                                                      <img src="{% static 'img/sellado.svg' %}" style="width: 20px; margin-left: 1%;"> 
+                                                {% endif %}
+                                                <p>{{x.modelo.nombre}} - {{x.color}}</p> 
+                                                <p>- {{x.capacidad}} </p>    
+                                          </div> 
+                                          <div class="infoventa">
+                                                <div style="border-left: none;  width: 100%;">
+                                                      {{ x.descripcion }}
+                                                </div>                                              
+                                          </div>
+                                    </a>
+                              {% else %}
+                                    <a class="ver novendidos" target={{x.id}}>
+                                          <div style="text-align: left;">
+                                                {% if x.modalidad == "Open box"%}
+                                                      <img src="{% static 'img/openbox.svg' %}" style="width: 20px; margin-left: 1%;"> 
+                                                {% else %}
+                                                      <img src="{% static 'img/sellado.svg' %}" style="width: 20px; margin-left: 1%;"> 
+                                                {% endif %}
+                                                <p>{{x.modelo.nombre}} - {{x.color}}</p> 
+                                                <p>{{x.capacidad}} </p>    
+                                          </div> 
+                                          <div class="infoventa">
+                                                <div style="border-left: none;  width: 100%;">
+                                                      {{ x.descripcion }}
+                                                </div>                                     
+                                          </div>
+                                    </a>
+                              {% endif %}
+                              <div class="cuadro-ver" id="fondo-ver{{x.id}}" target={{x.id}} style="display: none;">
+                                    <ul>
+                                          <li> {{x.modelo.nombre}}</li>
+                                          <li> {{x.capacidad}}</li>
+                                          <li>{{x.color}}</li>
+                                          <li>{{x.imei}}</li>
+                                    </ul>
+                                    <a id="cancelar">Cancelar</a> <br> 
+                              </div>
+                        </td>
+                        <td>
+                              {{x.fecha_venta|date:'Y-m-d'}} 
+                        </td>
+                        <td>{{x.imei}}</td>
+                        <td>{{x.modalidad}}</td>
+                        <td>{{x.fecha_compra|date:'Y-m-d'}}</td>
+                        <td>{{x.proveedor}}</td>
+                        <td class="classcompras">{{x.monto_compra}}</td>
+                        {%if x.monto_venta%}
+                              <td class="classventas">{{x.monto_venta}}</td>
+                        {% else %}
+                              <td class="">-</td>
+                        {% endif %}
+                        <td class="classganancias">{{x.ganancia}}</td>
+                        <td>
+                              <a href="{% url 'editar_dispositivo' x.id %}"><img src="{% static 'img/editar.svg' %}" style="width: 20px;"></a>
+                              {% if x.vendido %}
+                                    <a href="{% url 'monedero_dispositivo' x.id %}"><img src="{% static 'img/cartera.svg' %}" style="width: 20px;"> </a>
+                              {% endif %}
+                              
+                              <a class="eliminar" target={{x.id}}> <img src="{% static 'img/eliminar.svg' %}" style="width: 20px;  cursor: pointer;"> </a>
+                              <div class="cuadro-eliminar" id="fondo-eliminar{{x.id}}" target={{x.id}} style="display: none;">
+                                    ¿Deseas eliminar este dispositivo?
+                                    <ul>
+                                          <li> {{x.modelo.nombre}}</li>
+                                          <li> {{x.capacidad}}</li>
+                                          <li>{{x.color}}</li>
+                                          <li>{{x.imei}}</li>
+                                    </ul>
+                                    <a id="cancelar">Cancelar</a> <br> 
+                                    <a href="{% url 'eliminar_dispositivo' x.id %}">Confirmar</a> <br> 
+                              </div>
+                        </td>
+                  </tr>
+            {% endfor %}
+            {% for x in accesorios %}      
+                  <tr>
+                        <td>
+                              <a class="ver vendidos" target={{x.id}}>
+                                    <div style="text-align: left;">
+                                          {% if x.marca == "Apple"%}
+                                                <img src="{% static 'img/apple.svg' %}" style="width: 16px; margin-left: 1%;"> 
+                                          {% else %}
+                                                <img src="{% static 'img/sellado.svg' %}" style="width: 20px; margin-left: 1%;"> 
+                                          {% endif %}
+                                          <p>{{x.tipo}} {{x.conexion}} </p> 
+                                    </div> 
+                                    <div class="infoventa">
+                                          <div style="border-left: none;  width: 100%;">
+                                                {{ x.descripcion }}
+                                          </div>                                              
+                                    </div>
+                              </a>
+                              <div class="cuadro-ver" id="fondo-ver{{x.id}}" target={{x.id}} style="display: none;">
+                                    <ul>
+                                          <li> {{x.marca}}</li>
+                                          <li> {{x.tipo}}</li>
+                                          <li>{{x.descripcion}}</li>
+                                          <li>{{x.fecha_venta}}</li>
+                                    </ul>
+                                    <a id="cancelar">Cancelar</a> <br> 
+                              </div>
+                        </td>
+                        <td>
+                              {{x.fecha_venta|date:'Y-m-d'}} 
+                        </td>
+                        <td>{{x.imei}}</td>
+                        <td>{{x.modalidad}}</td>
+                        <td>{{x.fecha_compra|date:'Y-m-d'}}</td>
+                        {%if x.proveedor%}
+                              <td>{{x.proveedor}}</td>
+                        {% else %}
+                              <td ></td>
+                        {% endif %}
+                        <td class="classcompras">{{x.monto_compra}}</td>
+                        {%if x.monto_venta%}
+                              <td class="classventas">{{x.monto_venta}}</td>
+                        {% else %}
+                              <td></td>
+                        {% endif %}
+                        <td class="classganancias">{{x.ganancia}}</td>
+                        <td>
+                              <a href="{% url 'editar_accesorio' x.id %}"><img src="{% static 'img/editar.svg' %}" style="width: 20px;"></a>
+                              <a href="{% url 'monedero_accesorio' x.id %}"><img src="{% static 'img/cartera.svg' %}" style="width: 20px;"> </a>                              
+                              <a class="eliminar" target={{x.id}}> <img src="{% static 'img/eliminar.svg' %}" style="width: 20px;   cursor: pointer;"> </a>
+                              <div class="cuadro-eliminar" id="fondo-eliminar{{x.id}}" target={{x.id}} style="display: none;">
+                                    ¿Deseas eliminar este dispositivo?
+                                    <ul>
+                                          <li> {{x.modelo.nombre}}</li>
+                                          <li> {{x.capacidad}}</li>
+                                          <li>{{x.color}}</li>
+                                          <li>{{x.imei}}</li>
+                                    </ul>
+                                    <a id="cancelar">Cancelar</a> <br> 
+                                    <a href="{% url 'eliminar_accesorio' x.id %}">Confirmar</a> <br> 
+                              </div>
+                        </td>
+                  </tr>
+            {% endfor %}
+      </tbody>
+</table>
+      <script type="text/javascript">
+            $(document).ready( function () {
+              $('#tabla_datos').DataTable({
+                        "columnDefs": [
+                              { "orderable": false, "targets": [0, 2, 6, 7, 8, 9] },
+                              { "type": "date", "targets": 1 },
+                              {  "targets": [ 3 ], "visible": false },
+                              {  "targets": [6,7,8,9 ], "searchable": false },
+                        ],
+                        "language": {
+                              "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                        },
+                        "order": [[ 1, "desc" ], ],
+                        'info': false,
+                        "lengthMenu": [[-1,], ["Todos"]],
+                        //"dom": '<"top"i>rt<"bottom"flp><"clear">'
+                        //"dom": '<"top"i>rt<"bottom"flp><"clear">',
+                        'dom': 'Pfrtip',
+                        "scrollY":  "500px",
+                        "scrollCollapse": true,
+                        "paging": false,
+                  });
+                  
+                  var table = $('#tabla_datos').DataTable();
+                  table.on('draw', function () {
+                        /*
+                        table.columns( '.sum' ).every( function () {
+                              var sum = this.data().reduce( 
+                                    function (a,b) {
+                                          return parseFloat(a) + parseFloat(b);
+                                    }
+                              );
+                              $("#suma").html( 'Sum: '+sum );
+                        } );
+                        */
+                        var total = 0; var total2= 0; var total3 = 0;
+                        var datas = document.querySelectorAll(".classcompras");
+                        var datas2 = document.querySelectorAll(".classventas");
+                        var datas3 = document.querySelectorAll(".classganancias");
+                        for (var i = 0; i <datas.length; i++ ){
+                              total += parseFloat(datas[i].firstChild.data.replace(",", "."));
+                        }
+                        for (var i = 0; i <datas2.length; i++ ){
+                              total2 += parseFloat(datas2[i].firstChild.data.replace(",", "."));
+                        }
+                        for (var i = 0; i <datas3.length; i++ ){
+                              total3 += parseFloat(datas3[i].firstChild.data.replace(",", "."));
+                        }
+                        $("#compras").html( 'Compras: $'+total );
+                        $("#ventas").html( 'Ventas: $'+total2 );
+                        $("#ganancias").html( 'Ganancias: $'+total3 );
+                  });
+
+
+                  
+                  /*
+                  table.columns().every( function () {
+                  var that = this;
+                  
+                  $( '#has', this.footer() ).on( 'keyup change', function () {
+                        that
+                              .search( this.value )
+                              .draw();
+                  } );
+                  } );
+                  */
+            });
+      </script>
+</div>
+{% endblock %}
